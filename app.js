@@ -3,7 +3,9 @@ const app = express();
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const User = require('./models/user')
+const User = require('./models/user');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
 const port = process.env.PORT || 3000;
 
 // ------------------- mongoose setup --------------//
@@ -20,6 +22,29 @@ var db = mongoose.connection;
 //Bind connection to error event (to get notification of connection errors)
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
+
+// -------------------- Passport/session setup ---------------------//
+app.use(require('express-session')({
+    secret: "A very secret secure key",
+    resave: false,
+    saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+//authenticate, serialize, deserialize come from local-mongoose plugin
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
+// -------------------- middleware -------------------//
+
+let isLoggedIn = function(req, res, next){
+    if (req.user) {
+        return next();
+    }
+    res.redirect('/login');
+}
 
 // -------------------- app setup ------------------//
 app.set("view engine", "ejs");
@@ -44,8 +69,9 @@ app.get('/login', function(req, res){
     res.render('login'); 
 });
 
-app.post('/login', function(req, res){
-    res.send(req.body.username + req.body.password);
+app.post('/login', 
+passport.authenticate('local',{ successRedirect: '/',
+                      failureRedirect: '/login' }), function(req, res){
 });
 
 app.get('/register', function(req, res){
@@ -53,7 +79,25 @@ app.get('/register', function(req, res){
 });
 
 app.post('/register', function(req, res){
-    res.send(req.body.username + req.body.password);
+    if(req.body.password != req.body.confirmPass){
+        return res.render('register');
+    }
+    let new_user = new User({username: req.body.username});
+    User.register(new_user, req.body.password, (err, user) => {
+        if(err){
+            console.log(err);
+            return res.render('register');
+        }
+        req.login(user, function(err) {
+            if (err) { return res.send(err) }
+            return res.redirect('/');
+          });
+    });
 });
+
+app.get('/logout', function(req, res){
+    req.logout();
+    res.redirect("/");
+})
 
 app.listen(port, () => console.log(`Server started on ${port}`));
