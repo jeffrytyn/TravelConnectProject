@@ -1,0 +1,40 @@
+
+
+#tophalf{
+    min-height: 33rem;
+    width: 100%;
+    background: url(https://architectui.com/static/media/front-bg.34c63b94.jpg) fixed;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    padding: 4rem 0 3rem 0;
+}
+
+#bottomhalf{
+    padding-top: 4rem;
+    text-align: center;
+}
+
+#signUpBtns a{
+    margin: 0 2rem;
+}
+
+#introCard{
+    margin-bottom: 0;
+}
+
+#mainNav .navbar-toggler{
+    border-color: white;
+}
+
+#mainNav .navbar-toggler-icon{
+    background-color: white;
+}
+
+#mainNav a{
+    color: white;
+}
+
+#mainNav .nav-item .nav-link:hover{
+    color:rgb(214, 122, 127);
+}
