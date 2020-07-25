@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const User = require('./models/user');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
+const flash = require('connect-flash');
 const port = process.env.PORT || 3000;
 
 // ------------------- mongoose setup --------------//
@@ -52,11 +53,12 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(flash());
 
 app.use(function(req, res, next){
     res.locals.currentUser = req.user;
-    // res.locals.error = req.flash("error");
-    // res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+    res.locals.success = req.flash("success");
     next();
  });
 
@@ -70,8 +72,11 @@ app.get('/login', function(req, res){
 });
 
 app.post('/login', 
-passport.authenticate('local',{ successRedirect: '/',
-                      failureRedirect: '/login' }), function(req, res){
+    passport.authenticate('local',{ successRedirect: '/',
+                                    failureRedirect: '/login',
+                                    successFlash: "You've been signed in!", //maps to success in req.flash
+                                    failureFlash: "Invalid username or password."}), //maps to error in req.flash 
+    function(req, res){
 });
 
 app.get('/register', function(req, res){
@@ -80,16 +85,18 @@ app.get('/register', function(req, res){
 
 app.post('/register', function(req, res){
     if(req.body.password != req.body.confirmPass){
+        req.flash('error', "Passwords don't match!");
         return res.render('register');
     }
     let new_user = new User({username: req.body.username});
     User.register(new_user, req.body.password, (err, user) => {
         if(err){
-            console.log(err);
-            return res.render('register');
+            req.flash('error', "User with that name already exists.");
+            return res.redirect('/register');
         }
         req.login(user, function(err) {
-            if (err) { return res.send(err) }
+            if (err) { return req.flash('error', "Error with login."); }
+            req.flash("success", "You have been registered!");
             return res.redirect('/');
           });
     });
@@ -97,6 +104,7 @@ app.post('/register', function(req, res){
 
 app.get('/logout', function(req, res){
     req.logout();
+    req.flash('success', "You have been logged out!");
     res.redirect("/");
 })
 
