@@ -1,6 +1,6 @@
 <%- include('partials/header.ejs') %>
 <div id='tophalf'>
-    <div id = "homepage" class="container">
+    <div class="container">
         <div id = "introCard" class="jumbotron">
             <% if(currentUser){ %>
                 <h1 class="display-4">Hello, <%= currentUser.username%>!</h1>
@@ -14,6 +14,7 @@
         </div>
     </div>
 </div>
+<% if(!currentUser) {%>
 <div id='bottomhalf'>
     <div class="container">
         <h1>New or Returning?</h1>
@@ -23,6 +24,7 @@
         </div>
     </div>
 </div>
+<% } %>
 
 
 <%- include('partials/footer.ejs') %>

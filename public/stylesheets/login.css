@@ -14,3 +14,11 @@
     padding: 15px;
     margin: auto;
 }
+
+#alertMessage{
+    position: fixed;
+    top: 5%;
+    left: 25%;
+    width: 50%;
+    text-align: center;
+}

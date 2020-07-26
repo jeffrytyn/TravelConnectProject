@@ -1,4 +1,9 @@
-
+#alertMessage{
+    position: fixed;
+    top: 3rem;
+    left: 25%;
+    width: 50%;
+}
 
 #tophalf{
     min-height: 33rem;
