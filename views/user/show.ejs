@@ -1,9 +1,30 @@
 <%- include('../partials/header') %>
-
+<div class='container home-btn'>
+    <a href="/">Home</a>
+</div>
 <div class="profile-pic">
     <span class="dot"></span>
     <div class='profile-username'>
         <h1><%= foundUser.username %></h1>
+    </div>
+</div>
+
+<div class='container'>
+    <div class="profile-ruler">
+        <h1 class='lead'>Posts</h1>
+        <hr class="posts-ruler">
+    </div>
+    <div class='row'>
+        <div class="col-lg-4 col-md-6 col-sm-12">
+            <div class="card">
+                <img src="https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png" class="card-img-top" alt="Image goes here">
+                <div class="card-body">
+                  <h5 class="card-title">Card title</h5>
+                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+              </div>
+        </div>
     </div>
 </div>
 

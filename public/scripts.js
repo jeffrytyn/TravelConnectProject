@@ -1,4 +1,3 @@
-
 function toggleNavbarBG(){
     const w = window.innerWidth
     || document.documentElement.clientWidth
