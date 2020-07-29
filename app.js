@@ -71,6 +71,17 @@ app.get('/login', function(req, res){
     res.render('login'); 
 });
 
+app.get('/:username', function(req, res){
+    User.findOne({username: req.params.username}, function(err, user){
+        if(!user || err){
+            req.flash("error", `No user with username ${req.params.username} found`);
+            return res.redirect("back");
+        }
+        res.render('user/show', {foundUser: user});
+    });
+});
+
+
 app.post('/login', 
     passport.authenticate('local',{ successRedirect: '/',
                                     failureRedirect: '/login',

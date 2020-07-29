@@ -1,0 +1,19 @@
+.dot {
+    height: 200px;
+    width: 200px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  @media only screen and (max-width: 700px) {
+    .dot {
+        height: 150px;
+        width: 150px;
+    }
+  }
+
+  .profile-pic{
+      text-align: center;
+      padding-top: 5rem;
+  }
