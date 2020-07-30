@@ -123,4 +123,13 @@ app.get('/:username', function(req, res){
     });
 });
 
+app.post('/:username', function(req, res){
+    let username = req.body.searchUser;
+    if(username){
+        res.redirect('/' + username);
+    }else{
+        res.redirect("back");
+    }
+});
+
 app.listen(port, () => console.log(`Server started on ${port}`));
