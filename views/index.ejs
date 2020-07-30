@@ -38,6 +38,18 @@
         <h1 class='display-4'>Recents</h1>
     </div>
 <% } %>
+
+<script>
+    $( function() {
+        let users = <%- JSON.stringify(names) %>;
+        console.log(users);
+        if(users){
+            $( "#otherUsername" ).autocomplete({
+            source: users
+            });
+        }
+    } );
+</script>
 <script>
 $('#otherUser').submit(function(){
     var user = $('#otherUsername').val();

@@ -64,7 +64,12 @@ app.use(function(req, res, next){
 
 // --------------- ROUTES ------------------ //
 app.get('/', function(req, res){
-    res.render('index'); //express looks in views directory by default
+    User.find({}, (err, users) => {
+        if(err) return res.render('index');
+        const names = [];
+        users.forEach(user => names.push(user.username));
+        return res.render('index', {names: names});
+    }); //express looks in views directory by default
 });
 
 app.get('/login', function(req, res){
