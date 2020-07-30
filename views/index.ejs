@@ -10,10 +10,10 @@
             <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
             <hr class="my-4">
             <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-            <form id="otherUser" action="" method="GET">
+            <form id="otherUser" action="" method="GET" autocomplete="off">
                 <div class="form-row">
-                  <div class="col-md-7">
-                    <input type="text" class="form-control" id="otherUsername" name="username" placeholder="Search Other Users">
+                  <div class="col-md-7 autocomplete">
+                    <input type="text" class="form-control" id="searchUser" name="username" placeholder="Search Other Users">
                   </div>
                   <div class='col-md-3'>
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
@@ -39,22 +39,15 @@
     </div>
 <% } %>
 
+<script src="/scripts.js"></script>
 <script>
-    $( function() {
-        let users = <%- JSON.stringify(names) %>;
-        console.log(users);
-        if(users){
-            $( "#otherUsername" ).autocomplete({
-            source: users
-            });
-        }
-    } );
+    let users = <%- JSON.stringify(names) %>;
+    autocomplete(document.getElementById("searchUser"), users);
 </script>
 <script>
 $('#otherUser').submit(function(){
-    var user = $('#otherUsername').val();
+    var user = $('#searchUser').val();
     $(this).attr('action', "/" + user);
   }); 
 </script>
-<script src="/scripts.js"></script>
 <%- include('partials/footer.ejs') %>
