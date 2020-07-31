@@ -47,7 +47,7 @@
 <script>
 $('#userForm').submit(function(){
     let user = $('#searchUser').val();
-    $(this).attr('action', "/" + user);
+    $(this).attr('action', "/accounts/" + user);
   }); 
 </script>
 <%- include('partials/footer.ejs') %>

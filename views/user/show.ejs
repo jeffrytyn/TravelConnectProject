@@ -11,7 +11,12 @@
 
 <div class='container'>
     <div class="profile-ruler">
-        <h1 class='lead'>Posts</h1>
+        <p class='lead'>
+            <a >Posts</a>
+            <% if(currentUser && currentUser.username === foundUser.username) { %>
+                <a class='btn btn-outline-primary float-right' href='/accounts/<%= foundUser.username %>/posts/new'>New Post</a>
+            <% } %>
+        </p>
         <hr class="posts-ruler">
     </div>
     <div class='row'>

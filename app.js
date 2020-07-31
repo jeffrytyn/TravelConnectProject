@@ -3,11 +3,17 @@ const app = express();
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const User = require('./models/user');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const flash = require('connect-flash');
 const port = process.env.PORT || 3000;
+
+const userRoutes = require('./routes/userRoutes');
+const authRoutes = require('./routes/auth');
+const postRoutes = require('./routes/postRoutes');
+
+const User = require('./models/user');
+const Post = require('./models/post');
 
 // ------------------- mongoose setup --------------//
 //Set up default mongoose connection
@@ -37,16 +43,6 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-
-// -------------------- middleware -------------------//
-
-let isLoggedIn = function(req, res, next){
-    if (req.user) {
-        return next();
-    }
-    res.redirect('/login');
-}
-
 // -------------------- app setup ------------------//
 app.set("view engine", "ejs");
 
@@ -72,64 +68,14 @@ app.get('/', function(req, res){
     }); //express looks in views directory by default
 });
 
-app.get('/login', function(req, res){
-    res.render('login'); 
-});
+app.use('/', authRoutes);
 
-app.post('/login', 
-    passport.authenticate('local',{ successRedirect: '/',
-                                    failureRedirect: '/login',
-                                    successFlash: "You've been signed in!", //maps to success in req.flash
-                                    failureFlash: "Invalid username or password."}), //maps to error in req.flash 
-    function(req, res){
-});
+app.use('/accounts', userRoutes);
 
-app.get('/register', function(req, res){
-    res.render('register'); 
-});
+app.use('/accounts/:username/posts', postRoutes);
 
-app.post('/register', function(req, res){
-    if(req.body.password != req.body.confirmPass){
-        req.flash('error', "Passwords don't match!");
-        return res.render('register');
-    }
-    let new_user = new User({username: req.body.username});
-    User.register(new_user, req.body.password, (err, user) => {
-        if(err){
-            req.flash('error', "User with that name already exists.");
-            return res.redirect('/register');
-        }
-        req.login(user, function(err) {
-            if (err) { return req.flash('error', "Error with login."); }
-            req.flash("success", "You have been registered!");
-            return res.redirect('/');
-          });
-    });
-});
-
-app.get('/logout', function(req, res){
-    req.logout();
-    req.flash('success', "You have been logged out!");
-    res.redirect("/");
-});
-
-app.get('/:username', function(req, res){
-    User.findOne({username: req.params.username}, function(err, user){
-        if(!user || err){
-            req.flash("error", `No user with username ${req.params.username} found`);
-            return res.redirect("back");
-        }
-        res.render('user/show', {foundUser: user});
-    });
-});
-
-app.post('/:username', function(req, res){
-    let username = req.body.searchUser;
-    if(username){
-        res.redirect('/' + username);
-    }else{
-        res.redirect("back");
-    }
+app.get("*", function(req, res){
+    res.redirect('/');
 });
 
 app.listen(port, () => console.log(`Server started on ${port}`));
