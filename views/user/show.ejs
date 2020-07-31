@@ -27,7 +27,12 @@
                 <div class="card-body">
                   <h5 class="card-title"><%= post.title %></h5>
                   <p class="card-text"><%= post.body %></p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                  <% if(currentUser && currentUser.username === foundUser.username) { %>
+                    <form method="POST" action="/accounts/<%= foundUser.username %>/posts/<%= post._id %>?_method=DELETE">
+                        <button type='submit' class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                    <a href="/accounts/<%= foundUser.username %>/posts/<%= post._id %>/edit" class='btn btn-success btn-sm'>Edit post</a>
+                  <% } %>
                 </div>
               </div>
         </div>

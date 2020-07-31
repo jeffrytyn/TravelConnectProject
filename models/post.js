@@ -4,7 +4,7 @@ let PostSchema = new mongoose.Schema({
     title: String,
     body: String,
     image: String,
-    author: {type: mongoose.Schema.Types.ObjectId, ref:"User"},
+    author: { type : String , unique : false, required : true },
     date: Date
 });
 

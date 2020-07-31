@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 const User = require('../models/user');
 const Post = require('../models/post');
 
@@ -9,7 +9,7 @@ router.get('/:username', function(req, res){
             req.flash("error", `No user with username ${req.params.username} found`);
             return res.redirect("back");
         }
-        Post.find({author: user._id}).exec(function (err, posts) {
+        Post.find({author: user.username}).exec(function (err, posts) {
             if (err){
                 req.flash('error', 'Error retrieving posts.');
                 return res.render('user/show', {foundUser: user});

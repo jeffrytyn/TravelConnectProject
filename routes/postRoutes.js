@@ -1,7 +1,20 @@
 const express = require('express');
-const mongoose = require('mongoose');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 const Post = require('../models/post');
+
+let checkPostOwnership = function(req, res, next){
+    Post.findById(req.params.id, function(err, post){
+        if(!post || err){
+            req.flash('error', 'No such post exists.');
+            return res.redirect('back');
+        }
+        if(post.author === req.user.username){
+            return next();
+        }
+        req.flash("error, "`This post was not authored by user ${req.params.username}.`);
+        return res.redirect('back');
+    });
+};
 
 router.use(function(req, res, next){
     if (req.user) {
@@ -19,7 +32,7 @@ router.post('/new', function(req, res){
     let newPost = new Post({title: req.body.title, 
                            body: req.body.body, 
                            image: req.body.image, 
-                           author: req.user._id,
+                           author: req.user.username,
                            date: Date.now()
                           });
     newPost.save(function(err, post){
@@ -27,8 +40,30 @@ router.post('/new', function(req, res){
             req.flash(error, "There was an error submitting the post, try again.");
             return res.redirect(`/accounts/${req.user.username}/posts/new`);
         }
-        res.redirect(`/accounts/${req.user.username}`);
+        return res.redirect(`/accounts/${req.user.username}`);
     });
+});
+
+router.delete('/:id', checkPostOwnership, function(req, res){
+    Post.findByIdAndDelete(req.params.id, function(err, post){
+        if(!post || err){
+            req.flash("error", "Error deleting post.");
+        }
+        return res.redirect(`/accounts/${req.user.username}`);
+    })
+});
+
+router.get('/:id/edit', checkPostOwnership, function(req, res){
+    res.render('/posts/edit');
+});
+
+router.put('/:id', checkPostOwnership, function(req, res){
+    Post.findByIdAndDelete(req.params.id, function(err, post){
+        if(!post || err){
+            req.flash("error", "Error deleting post.");
+        }
+        return res.redirect(`/accounts/${req.user.username}`);
+    })
 });
 
 module.exports = router;

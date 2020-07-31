@@ -19,6 +19,7 @@ const User = require('./models/user');
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
+mongoose.set('useCreateIndex', true);
 var mongoDB = process.env.DATABASEURL || 'mongodb://localhost/TravelConnect';
 mongoose.connect(mongoDB);
 
