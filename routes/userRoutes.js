@@ -10,7 +10,7 @@ router.get('/:username', function(req, res){
             return res.redirect("back");
         }
         Post.find({author: user.username}).exec(function (err, posts) {
-            if (err){
+            if (!posts || err){
                 req.flash('error', 'Error retrieving posts.');
                 return res.render('user/show', {foundUser: user});
             }

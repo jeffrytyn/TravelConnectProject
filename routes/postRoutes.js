@@ -54,16 +54,23 @@ router.delete('/:id', checkPostOwnership, function(req, res){
 });
 
 router.get('/:id/edit', checkPostOwnership, function(req, res){
-    res.render('/posts/edit');
+    Post.findById(req.params.id, function(err, post){
+        if(!post || err){
+            req.flash('error', "Error finding post");
+            return res.redirect(`/accounts/${req.user.username}`);
+        }
+        return res.render('posts/edit', {post: post});
+    })
 });
 
 router.put('/:id', checkPostOwnership, function(req, res){
-    Post.findByIdAndDelete(req.params.id, function(err, post){
+    Post.findByIdAndUpdate(req.params.id, {title: req.body.title, body: req.body.body, image: req.body.image}, function(err, post){
         if(!post || err){
-            req.flash("error", "Error deleting post.");
+            req.flash("error", "Error updating post.");
+            return res.redirect(`/${req.params.id}/edit`);
         }
         return res.redirect(`/accounts/${req.user.username}`);
-    })
+    });
 });
 
 module.exports = router;

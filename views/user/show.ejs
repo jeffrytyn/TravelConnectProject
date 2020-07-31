@@ -6,6 +6,7 @@
     <span class="dot"></span>
     <div class='profile-username'>
         <h1><%= foundUser.username %></h1>
+        
     </div>
 </div>
 
@@ -21,7 +22,7 @@
     </div>
     <div class='row'>
         <% posts.forEach(function(post){ %>
-        <div class="col-lg-4 col-md-6 col-sm-12">
+        <div class="col-lg-4 col-md-6 col-sm-12 mb-5">
             <div class="card">
                 <img src="<%= post.image %>" class="card-img-top" alt="Image goes here">
                 <div class="card-body">
@@ -29,9 +30,9 @@
                   <p class="card-text"><%= post.body %></p>
                   <% if(currentUser && currentUser.username === foundUser.username) { %>
                     <form method="POST" action="/accounts/<%= foundUser.username %>/posts/<%= post._id %>?_method=DELETE">
-                        <button type='submit' class="btn btn-danger btn-sm">Delete</button>
+                        <button type='submit' class="btn btn-outline-danger btn-sm">Delete</button>
+                        <a href="/accounts/<%= foundUser.username %>/posts/<%= post._id %>/edit" class='btn btn-outline-success btn-sm float-right'>Edit post</a>
                     </form>
-                    <a href="/accounts/<%= foundUser.username %>/posts/<%= post._id %>/edit" class='btn btn-success btn-sm'>Edit post</a>
                   <% } %>
                 </div>
               </div>
