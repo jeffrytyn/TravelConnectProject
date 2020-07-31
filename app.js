@@ -13,14 +13,13 @@ const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/postRoutes');
 
 const User = require('./models/user');
-const Post = require('./models/post');
 
 // ------------------- mongoose setup --------------//
 //Set up default mongoose connection
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
-var mongoDB = process.env.DATABASEURL || 'mongodb://127.0.0.1/TravelConnect';
+var mongoDB = process.env.DATABASEURL || 'mongodb://localhost/TravelConnect';
 mongoose.connect(mongoDB);
 
 //Get the default connection

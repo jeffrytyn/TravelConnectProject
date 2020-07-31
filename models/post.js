@@ -4,7 +4,8 @@ let PostSchema = new mongoose.Schema({
     title: String,
     body: String,
     image: String,
-    author: {id: {type: mongoose.Schema.Types.ObjectId, ref:"User"}, username: String}
+    author: {type: mongoose.Schema.Types.ObjectId, ref:"User"},
+    date: Date
 });
 
 module.exports = mongoose.model("Post", PostSchema);

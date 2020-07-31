@@ -20,16 +20,18 @@
         <hr class="posts-ruler">
     </div>
     <div class='row'>
+        <% posts.forEach(function(post){ %>
         <div class="col-lg-4 col-md-6 col-sm-12">
             <div class="card">
-                <img src="https://cdn1.iconfinder.com/data/icons/business-company-1/500/image-512.png" class="card-img-top" alt="Image goes here">
+                <img src="<%= post.image %>" class="card-img-top" alt="Image goes here">
                 <div class="card-body">
-                  <h5 class="card-title">Card title</h5>
-                  <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                  <h5 class="card-title"><%= post.title %></h5>
+                  <p class="card-text"><%= post.body %></p>
                   <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
               </div>
         </div>
+        <% }) %>
     </div>
 </div>
 
