@@ -6,7 +6,17 @@
     <span class="dot"></span>
     <div class='profile-username'>
         <h1><%= foundUser.username %></h1>
-        
+        <% if(currentUser && currentUser.username !== foundUser.username){ %>
+        <form action='/accounts/<%= foundUser.username %>?_method=PATCH' method="POST">
+            <button type='submit' class="btn btn-outline-primary btn-sm">
+                <% if(currentUser.following.includes(foundUser.username)){ %>
+                    Following
+                <% }else{ %>
+                    Follow
+                <% } %>
+            </button>
+        </form>
+        <% } %>
     </div>
 </div>
 

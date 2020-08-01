@@ -31,7 +31,10 @@ router.post('/register', function(req, res){
             return res.redirect('/register');
         }
         req.login(user, function(err) {
-            if (err) { return req.flash('error', "Error with login."); }
+            if (err){
+                req.flash('error', "Error with login."); 
+                return res.redirect('/login');
+            }
             req.flash("success", "You have been registered!");
             return res.redirect('/');
           });
