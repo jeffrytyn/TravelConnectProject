@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router({mergeParams: true});
 const Post = require('../models/post');
-const middleware = require("../middleware/index");
+const middleware = require("../middleware/main");
 
 router.use(middleware.isLoggedIn);
 

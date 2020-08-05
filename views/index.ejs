@@ -34,42 +34,29 @@
     </div>
 </div>
 <% }else{ %>
-    <div class="row">
-        <div class="followingList col-sm-1">
-            <h5>Following</h5>
-            <% currentUser.following.forEach(function(user){ %>
-                <p><%= user %></p>
-            <% }) %>
-        </div>
-        <div class="followerList col-sm-1">
-            <h5>Followers</h5>
-            <% currentUser.followers.forEach(function(user){ %>
-                <p><%= user %></p>
-            <% }) %>
-        </div>
-        <div class="col-sm-10">
-            <h1 class='display-4'>Recents</h1>
-            <div class='followingContent row'>
-                <% if(posts && posts.length > 0){ %>
-                    <% posts.forEach(function(post){ %>
-                    <div class="col-12">
-
+    <div class="container">
+        <h1 class='display-4 text-center'>Recents</h1>
+        <div class="row justify-content-center">
+            <% if(posts && posts.length > 0){ %>
+                <% posts.forEach(function(post){ %>
+                <div class="col-lg-8 col-md-10 col-12">
+                    <div class="card">
+                        <img src="<%= post.image %>" class="card-img-top" alt="Image goes here">
+                        <div class="card-body">
+                            <p class='mb-2 font-italic'>By <%= post.author %></p>
+                            <h5 class="card-title"><%= post.title %></h5>
+                            <p class="card-text"><%= post.body %></p>
+                        </div>
                     </div>
-                    <% }) %>
-                <% } %>
-            </div>
+                </div>
+                <% }) %>
+            <% } %>
         </div>
     </div>
 <% } %>
 
-<script src="/scripts.js"></script>
+<script src="/homepage.js"></script>
 <script>
     autocomplete(document.getElementById("searchUser"), <%- JSON.stringify(names) %>);
-</script>
-<script>
-$('#userForm').submit(function(){
-    let user = $('#searchUser').val();
-    $(this).attr('action', "/accounts/" + user);
-  }); 
 </script>
 <%- include('partials/footer.ejs') %>

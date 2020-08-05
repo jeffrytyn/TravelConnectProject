@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router({mergeParams: true});
 const User = require('../models/user');
 const Post = require('../models/post');
-const middleware = require("../middleware/index");
+const middleware = require("../middleware/main");
 
 let isLoggedIn = middleware.isLoggedIn;
 

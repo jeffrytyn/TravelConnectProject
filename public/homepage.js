@@ -19,6 +19,16 @@ $(".navbar-toggler").click(function(){
 });
 window.onresize = toggleNavbarBG;
 
+$('#userForm').submit(function(){
+  let user = $('#searchUser').val();
+  $(this).attr('action', "/accounts/" + user);
+}); 
+
+$(document).scroll(function () {
+  var $nav = $("#mainNav");
+  $nav.toggleClass("scrolled", $(this).scrollTop() > $nav.height());
+});
+
 
 function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,

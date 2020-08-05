@@ -6,6 +6,16 @@
     <span class="dot"></span>
     <div class='profile-username'>
         <h1><%= foundUser.username %></h1>
+        <div class="d-flex justify-content-center text-center mt-4">
+            <div class="d-inline-block mx-3">
+                <p><%= foundUser.followers.length%></p> 
+                <p>Followers</p>
+            </div>
+            <div class="d-inline-block mx-3">
+                <p class='.d-inline-block'><%= foundUser.following.length%></p> 
+                <p class='.d-inline-block'>Following</p>
+            </div>
+        </div>
         <% if(currentUser && currentUser.username !== foundUser.username){ %>
         <form action='/accounts/<%= foundUser.username %>?_method=PATCH' method="POST">
             <button type='submit' class="btn btn-outline-primary btn-sm">
@@ -45,7 +55,7 @@
                     </form>
                   <% } %>
                 </div>
-              </div>
+            </div>
         </div>
         <% }) %>
     </div>
