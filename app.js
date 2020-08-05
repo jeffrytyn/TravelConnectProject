@@ -13,6 +13,8 @@ const authRoutes = require('./routes/auth');
 const postRoutes = require('./routes/postRoutes');
 
 const User = require('./models/user');
+const Post = require("./models/post");
+const user = require('./models/user');
 
 // ------------------- mongoose setup --------------//
 //Set up default mongoose connection
@@ -62,9 +64,19 @@ app.use(function(req, res, next){
 app.get('/', function(req, res){
     User.find({}, (err, users) => {
         if(err) return res.render('index');
-        const names = [];
-        users.forEach(user => names.push(user.username));
-        return res.render('index', {names: names});
+        let names = []
+        users.forEach(user => names.push(user.username))
+        if(req.isAuthenticated()){
+            Post.find({author: {$in: req.user.following}}).sort({date: -1}).limit(10).exec(function(err, posts){
+                if(err){
+                    req.flash("error", "Error retrieving recent posts");
+                    return res.render('index', {names: names});
+                }
+                return res.render('index', {names: names, posts: posts});
+            });
+        }else{
+            res.render('index', {names: names});
+        }
     }); //express looks in views directory by default
 });
 

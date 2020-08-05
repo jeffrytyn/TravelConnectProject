@@ -22,7 +22,7 @@ router.get('/register', function(req, res){
 router.post('/register', function(req, res){
     if(req.body.password != req.body.confirmPass){
         req.flash('error', "Passwords don't match!");
-        return res.render('register');
+        return res.redirect('/register');
     }
     let new_user = new User({username: req.body.username});
     User.register(new_user, req.body.password, (err, user) => {

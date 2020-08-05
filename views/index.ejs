@@ -12,10 +12,10 @@
             <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
             <form id="userForm" action="" method="post" autocomplete="off">
                 <div class="form-row">
-                  <div class="col-md-7 autocomplete">
+                  <div class="col-md-7 autocomplete mb-4 p-0">
                     <input type="text" class="form-control" id="searchUser" name="searchUser" placeholder="Search Other Users" required>
                   </div>
-                  <div class='col-md-3'>
+                  <div class='col-md-3 pl-md-4 p-sm-0'>
                     <button class="btn btn-outline-success " type="submit">Search</button>
                   </div>
                 </div>
@@ -34,15 +34,37 @@
     </div>
 </div>
 <% }else{ %>
-    <div>
-        <h1 class='display-4'>Recents</h1>
+    <div class="row">
+        <div class="followingList col-sm-1">
+            <h5>Following</h5>
+            <% currentUser.following.forEach(function(user){ %>
+                <p><%= user %></p>
+            <% }) %>
+        </div>
+        <div class="followerList col-sm-1">
+            <h5>Followers</h5>
+            <% currentUser.followers.forEach(function(user){ %>
+                <p><%= user %></p>
+            <% }) %>
+        </div>
+        <div class="col-sm-10">
+            <h1 class='display-4'>Recents</h1>
+            <div class='followingContent row'>
+                <% if(posts && posts.length > 0){ %>
+                    <% posts.forEach(function(post){ %>
+                    <div class="col-12">
+
+                    </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
     </div>
 <% } %>
 
 <script src="/scripts.js"></script>
 <script>
-    let users = <%- JSON.stringify(names) %>;
-    autocomplete(document.getElementById("searchUser"), users);
+    autocomplete(document.getElementById("searchUser"), <%- JSON.stringify(names) %>);
 </script>
 <script>
 $('#userForm').submit(function(){

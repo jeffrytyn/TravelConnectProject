@@ -2,14 +2,9 @@ const express = require('express');
 const router = express.Router({mergeParams: true});
 const User = require('../models/user');
 const Post = require('../models/post');
+const middleware = require("../middleware/index");
 
-const isLoggedIn = function(req, res, next){
-    if (req.user) {
-        return next();
-    }
-    req.flash('error', 'You need to login first!');
-    res.redirect('/login');
-};
+let isLoggedIn = middleware.isLoggedIn;
 
 router.get('/:username', function(req, res){
     User.findOne({username: req.params.username}, function(err, user){
