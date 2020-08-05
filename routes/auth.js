@@ -24,20 +24,31 @@ router.post('/register', function(req, res){
         req.flash('error', "Passwords don't match!");
         return res.redirect('/register');
     }
-    let new_user = new User({username: req.body.username});
-    User.register(new_user, req.body.password, (err, user) => {
+    User.findOne({username: req.body.username}).collation({ locale: 'en_US', strength: 2 }).exec((err, user) => {
         if(err){
-            req.flash('error', "User with that name already exists.");
+            req.flash("error", "Error looking for users with similar names, try again.");
             return res.redirect('/register');
         }
-        req.login(user, function(err) {
-            if (err){
-                req.flash('error', "Error with login."); 
-                return res.redirect('/login');
-            }
-            req.flash("success", "You have been registered!");
-            return res.redirect('/');
-          });
+        if(user){
+            req.flash("error", "Your name is too similar to another account, try again.");
+            return res.redirect('/register');
+        }else{
+            let new_user = new User({username: req.body.username});
+            User.register(new_user, req.body.password, (err, user) => {
+                if(err){
+                    req.flash('error', "User with that name already exists.");
+                    return res.redirect('/register');
+                }
+                req.login(user, function(err) {
+                    if (err){
+                        req.flash('error', "Error with login."); 
+                        return res.redirect('/login');
+                    }
+                    req.flash("success", "You have been registered!");
+                    return res.redirect('/');
+                  });
+            });
+        }
     });
 });
 

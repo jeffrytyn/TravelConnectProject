@@ -14,7 +14,6 @@ const postRoutes = require('./routes/postRoutes');
 
 const User = require('./models/user');
 const Post = require("./models/post");
-const user = require('./models/user');
 
 // ------------------- mongoose setup --------------//
 //Set up default mongoose connection
@@ -62,12 +61,12 @@ app.use(function(req, res, next){
 
 // --------------- ROUTES ------------------ //
 app.get('/', function(req, res){
-    User.find({}, (err, users) => {
+    User.find({}, {"_id": 0, "username": 1}, (err, users) => {
         if(err) return res.render('index');
-        let names = []
-        users.forEach(user => names.push(user.username))
+        let names = [];
+        users.forEach(user => names.push(user.username));
         if(req.isAuthenticated()){
-            Post.find({author: {$in: req.user.following}}).sort({date: -1}).limit(10).exec(function(err, posts){
+            Post.find({author: {$in: req.user.following}}).sort({_date: -1}).limit(10).exec(function(err, posts){
                 if(err){
                     req.flash("error", "Error retrieving recent posts");
                     return res.render('index', {names: names});
