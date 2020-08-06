@@ -21,7 +21,7 @@ router.post('/new', checkAccountOwnership, function(req, res){
                           });
     newPost.save(function(err){
         if(err){
-            req.flash(error, "There was an error submitting the post, try again.");
+            req.flash("error", "There was an error submitting the post, try again.");
             return res.redirect(`/accounts/${req.user.username}/posts/new`);
         }
         return res.redirect(`/accounts/${req.user.username}`);

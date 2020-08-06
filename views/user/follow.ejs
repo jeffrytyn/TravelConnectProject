@@ -1,0 +1,16 @@
+<%- include('../partials/header') %>
+<div class="container mt-4">
+    <% if(followers){ %>
+        <h4>Followers</h4>
+        <% followers.forEach(function(name){ %>
+            <p class="lead"><%= name %></p>
+        <% }); %>
+    <% } %>
+    <% if(following){ %>
+        <h4>Following</h4>
+        <% following.forEach(function(name){ %>
+            <p class="lead"><%= name %></p>
+        <% }); %>
+    <% } %>
+</div>
+<%- include('../partials/footer') %>

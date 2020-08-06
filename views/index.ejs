@@ -4,12 +4,12 @@
         <div id = "introCard" class="jumbotron">
             <% if(currentUser){ %>
                 <h1 class="display-4">Hello, <%= currentUser.username%>!</h1>
+                <p class="lead">Share what you've experienced with others.</p>
             <% }else{ %>
                 <h1 class="display-4">Welcome!</h1>
+                <p class="lead">TravelConnect is a space to see the wonderful and discover the unknown! You can create an account, make posts, and follow friends!</p>
             <% } %>
-            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
             <hr class="my-4">
-            <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
             <form id="userForm" action="" method="post" autocomplete="off">
                 <div class="form-row">
                   <div class="col-md-7 autocomplete mb-4 p-0">
@@ -39,8 +39,8 @@
         <div class="row justify-content-center">
             <% if(posts && posts.length > 0){ %>
                 <% posts.forEach(function(post){ %>
-                <div class="col-lg-8 col-md-10 col-12">
-                    <div class="card">
+                <div class="col-lg-6 col-md-10 col-12">
+                    <div class="card mb-4">
                         <img src="<%= post.image %>" class="card-img-top" alt="Image goes here">
                         <div class="card-body">
                             <p class='mb-2 font-italic'>By <%= post.author %></p>
@@ -58,5 +58,11 @@
 <script src="/homepage.js"></script>
 <script>
     autocomplete(document.getElementById("searchUser"), <%- JSON.stringify(names) %>);
+</script>
+<script>
+    $('#userForm').submit(function(){
+  let user = $('#searchUser').val();
+  $(this).attr('action', "/accounts/" + user);
+}); 
 </script>
 <%- include('partials/footer.ejs') %>

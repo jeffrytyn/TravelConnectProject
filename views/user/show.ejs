@@ -3,18 +3,22 @@
     <a href="/">Home</a>
 </div>
 <div class="profile-pic">
-    <span class="dot"></span>
+    <span class="dot"></span> <!-- profile pic goes here -->
     <div class='profile-username'>
         <h1><%= foundUser.username %></h1>
         <div class="d-flex justify-content-center text-center mt-4">
-            <div class="d-inline-block mx-3">
-                <p><%= foundUser.followers.length%></p> 
-                <p>Followers</p>
-            </div>
-            <div class="d-inline-block mx-3">
-                <p class='.d-inline-block'><%= foundUser.following.length%></p> 
-                <p class='.d-inline-block'>Following</p>
-            </div>
+            <a href="/accounts/<%= foundUser.username %>/followers" class="text-reset">
+                <div class="d-inline-block mx-3">
+                    <p><%= foundUser.followers.length%></p> 
+                    <p>Followers</p>
+                </div>
+            </a>
+            <a href= "/accounts/<%= foundUser.username %>/following" class="text-reset">
+                <div class="d-inline-block mx-3">
+                    <p class='.d-inline-block'><%= foundUser.following.length%></p> 
+                    <p class='.d-inline-block'>Following</p>
+                </div>
+            </a>
         </div>
         <% if(currentUser && currentUser.username !== foundUser.username){ %>
         <form action='/accounts/<%= foundUser.username %>?_method=PATCH' method="POST">
@@ -49,8 +53,8 @@
                   <h5 class="card-title"><%= post.title %></h5>
                   <p class="card-text"><%= post.body %></p>
                   <% if(currentUser && currentUser.username === foundUser.username) { %>
-                    <form method="POST" action="/accounts/<%= foundUser.username %>/posts/<%= post._id %>?_method=DELETE">
-                        <button type='submit' class="btn btn-outline-danger btn-sm">Delete</button>
+                    <form name="deleteForm" method="POST" action="/accounts/<%= foundUser.username %>/posts/<%= post._id %>?_method=DELETE">
+                        <button id="deletebtn" type='submit' class="btn btn-outline-danger btn-sm">Delete</button>
                         <a href="/accounts/<%= foundUser.username %>/posts/<%= post._id %>/edit" class='btn btn-outline-success btn-sm float-right'>Edit post</a>
                     </form>
                   <% } %>
@@ -61,4 +65,15 @@
     </div>
 </div>
 
+<script>
+    const btn = document.getElementById("deletebtn");
+    if(btn){
+        btn.addEventListener('click', function(){
+            const result = confirm("Want to delete this post?");
+            if (result) {
+                    document.deleteForm.submit();
+                }
+        });   
+    }
+</script>
 <%- include('../partials/footer') %>
