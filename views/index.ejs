@@ -59,10 +59,5 @@
 <script>
     autocomplete(document.getElementById("searchUser"), <%- JSON.stringify(names) %>);
 </script>
-<script>
-    $('#userForm').submit(function(){
-  let user = $('#searchUser').val();
-  $(this).attr('action', "/accounts/" + user);
-}); 
-</script>
+
 <%- include('partials/footer.ejs') %>

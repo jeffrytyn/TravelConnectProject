@@ -1,6 +1,6 @@
 <%- include('../partials/header') %>
 <div class='form-flex-div flex-column text-center'>
-    <form action="/accounts/<%= currentUser.username %>/edit?_method=PUT" method="POST">
+    <form action="/accounts/<%= currentUser.username %>/edit?_method=PUT" method="POST" enctype="multipart/form-data">
         <h1 class="h3 mb-3 font-weight-normal">Change Account Information</h1>
         <label for="username" class="sr-only">Change Username</label>
         <input type="text" id="username" name="username" class="form-control font-weight-bold" placeholder="Change Username" required autofocus value="<%= currentUser.username %>">

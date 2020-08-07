@@ -24,6 +24,10 @@ $(document).scroll(function () {
   $nav.toggleClass("scrolled", $(this).scrollTop() > $nav.height());
 });
 
+$('#userForm').submit(function(){
+  let user = $('#searchUser').val();
+  $(this).attr('action', "/accounts/" + user);
+}); 
 
 function autocomplete(inp, arr) {
     /*the autocomplete function takes two arguments,

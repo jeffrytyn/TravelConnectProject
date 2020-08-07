@@ -33,6 +33,7 @@ router.delete('/:id', checkPostOwnership, function(req, res){
         if(!post || err){
             req.flash("error", "Error deleting post.");
         }
+        req.flash("success", "Post deleted!");
         return res.redirect(`/accounts/${req.user.username}`);
     })
 });
@@ -53,6 +54,7 @@ router.put('/:id', checkPostOwnership, function(req, res){
             req.flash("error", "Error updating post.");
             return res.redirect(`/${req.params.id}/edit`);
         }
+        req.flash("success", "Post updated!");
         return res.redirect(`/accounts/${req.user.username}`);
     });
 });

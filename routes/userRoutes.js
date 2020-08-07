@@ -1,4 +1,6 @@
 const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
 const router = express.Router({mergeParams: true});
 const User = require('../models/user');
 const Post = require('../models/post');
@@ -6,6 +8,17 @@ const middleware = require("../middleware/main");
 
 let isLoggedIn = middleware.isLoggedIn;
 let checkAccountOwnership = middleware.checkAccountOwnership;
+
+const storage = multer.diskStorage({ 
+    destination: (req, file, cb) => { 
+        cb(null, './propics');
+    }, 
+    filename: (req, file, cb) => { 
+        cb(null, req.params.username + "_" + file.originalname); 
+    } 
+}); 
+  
+const upload = multer({ storage: storage });
 
 router.get('/:username', function(req, res){
     User.findOne({username: req.params.username}, function(err, user){
@@ -33,26 +46,42 @@ router.get('/:username/edit', [isLoggedIn, checkAccountOwnership], function(req,
     res.render("user/edit");
 });
 
-router.put('/:username/edit', [isLoggedIn, checkAccountOwnership], function(req, res){
+router.put('/:username/edit', [isLoggedIn, checkAccountOwnership, upload.single('propic')], function(req, res){
     User.findOne({username: req.params.username}, async function(err, user){
         if(!user || err){
             req.flash("error", "Error retrieving user.");
             return res.redirect(`/accounts/${req.params.username}/edit`);
         }
-        let currentUsername = req.params.username;
-        if(req.body.username != currentUsername){
+        if(req.body.username !== req.params.username){
             const existing = await User.exists({username: req.body.username});
             if(existing){
                 req.flash("error", "That username is taken, try again.");
-                res.redirect(`/accounts/${req.params.username}/edit`);
-            }else{
-                user.changeUserName(req.body.username);
-                currentUsername = req.body.username;
+                return res.redirect(`/accounts/${req.params.username}/edit`);
             }
+            Post.updateMany({author: user.username}, {author: req.body.username}, async function(err, result){
+                if(err){
+                    req.flash("error", "Unable to update post author, try again.");
+                    return res.redirect(`/accounts/${req.params.username}/edit`);
+                }
+                user.username = req.body.username;
+                await user.save();
+                currentUsername = req.body.username;
+            });
         }
-        if(req.body.password){
-            user.setPassword(req.body.password);
-            user.save();
+        if(req.body.password || req.body.confirmPass){
+            if(req.body.password !== req.body.confirmPass){
+                req.flash("error", "Those two passwords didn't match.");
+                return res.redirect(`/accounts/${req.params.username}/edit`)
+            }
+            await user.setPassword(req.body.password);
+            await user.save();
+        }
+        if(req.file){
+            user.profile_pic = {
+                data: fs.readFileSync(req.file.path),
+                contentType: req.file.mimetype
+            }
+            await user.save();
         }
         req.flash("success", "Changes saved. You must login again.");
         res.redirect("/login");

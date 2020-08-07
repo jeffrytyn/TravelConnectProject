@@ -9,17 +9,25 @@
     <link rel='stylesheet' href='/stylesheets/newpost.css'>
     <link rel="icon" href="https://img.icons8.com/color/48/000000/beach.png"/>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="alertMessage" class="container">
         <% if(error && error.length > 0){ %>
-            <div class="alert alert-danger" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <%= error %>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
             </div>
         <% } %>
         <% if(success && success.length > 0){ %>
-            <div class="alert alert-success" role="alert">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <%= success %>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
             </div>
         <% } %>
     </div>

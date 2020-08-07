@@ -14,18 +14,6 @@ let UserSchema = new mongoose.Schema({
 });
 UserSchema.plugin(passportLocalMongoose);
 
-UserSchema.methods.changeUserName = function(new_name){
-    this.model('User').findOne({username: this.username}, async function(err, user){
-        if(err){
-            console.log(err);
-        }else{
-            await Post.updateMany({author: user.username}, {author: new_name});
-            user.username = new_name;
-            user.save();
-        }
-    });
-}
-
 UserSchema.pre('deleteOne', {document: true}, async function(next) {
     try {
         await Post.deleteMany({author: this.username});
