@@ -1,6 +1,9 @@
 <%- include('../partials/header') %>
 <div class='container home-btn'>
     <a href="/">Home</a>
+    <% if(currentUser && currentUser.username === foundUser.username){ %>
+        <a class="float-right" href="/accounts/<%= foundUser.username %>/edit">Edit Profile</a>
+    <% } %>
 </div>
 <div class="profile-pic">
     <span class="dot"></span> <!-- profile pic goes here -->
@@ -68,12 +71,9 @@
 <script>
     const btn = document.getElementById("deletebtn");
     if(btn){
-        btn.addEventListener('click', function(){
-            const result = confirm("Want to delete this post?");
-            if (result) {
-                    document.deleteForm.submit();
-                }
-        });   
+        btn.onclick = function(){
+            return confirm("Want to delete this post?");
+        };    
     }
 </script>
 <%- include('../partials/footer') %>

@@ -3,10 +3,10 @@ A personal learning project for Node.js, Express, user auth, etc. A small social
 
 
 Future changes:
-* increase performance with MongoDB indexes
-* store posts with author instead of having PostSchema (could run faster as number of posts increase?)
+* increase performance with MongoDB indexes (DONE)
+* store posts with author instead of having PostSchema (DISREGARD)
 * file uploads for images
-* delete post confirmation
+* delete post confirmation (DONE)
 * deleting user account and all associated posts/following users
 * different auth methods
 * search bar scroll move with up/down arrow
