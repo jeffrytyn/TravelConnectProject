@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const fs = require('fs');
+const path = require('path');
 const router = express.Router({mergeParams: true});
 const User = require('../models/user');
 const Post = require('../models/post');
@@ -21,10 +22,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 router.get('/:username', function(req, res){
-    User.findOne({username: req.params.username}, function(err, user){
+    User.findOne({username: req.params.username}, async function(err, user){
         if(!user || err){
             req.flash("error", `No user with username ${req.params.username} found`);
             return res.redirect("back");
+        }
+        if(!user.profile_pic.data){
+            user.profile_pic = {
+                data: fs.readFileSync(path.resolve(__dirname, "../propics/user-default.png")),
+                contentType: "image/png"
+            }
+            await user.save();
         }
         Post.find({author: user.username}).exec(function (err, posts) {
             if (!posts || err){
@@ -82,6 +90,11 @@ router.put('/:username/edit', [isLoggedIn, checkAccountOwnership, upload.single(
                 contentType: req.file.mimetype
             }
             await user.save();
+            fs.unlink(req.file.path, (err) => {
+                if(err){
+                    console.log("Unable to remove image with error: " + err);
+                }
+            });
         }
         req.flash("success", "Changes saved. You must login again.");
         res.redirect("/login");
@@ -110,44 +123,30 @@ router.get('/:username/following', function(req, res){
 
 router.patch('/:username', isLoggedIn, function(req, res){
     const inspec = req.params.username;
-    if(inspec != req.user.username){
-        User.findOne({username: inspec}, function(err, user){
+    if(inspec !== req.user.username){
+        User.findOne({username: inspec}, async function(err, user){
             if(err || !user){
                 req.flash('error', "Error finding user");
                 return res.redirect('/accounts/' + inspec);
             }
             if(!("followers" in user)){
-                user.updateOne({followers: []}).exec();
+                user.followers = [];
+                await user.save();
             }
             if(!("following" in req.user)){
-                req.user.updateOne({following: []}).exec();
+                req.user.following = [];
+                await req.user.save();
             }
-            const index = req.user.following.indexOf(inspec);
-            if(index < 0){
-                req.user.updateOne({$push: {following: inspec}}).exec();
-                user.updateOne({$addToSet: {followers: req.user.username}}).exec();
+            if(req.user.following.includes(inspec)){
+                req.user.updateOne({$pull: {following: inspec}}).exec();
+                user.updateOne({$pull: {followers: req.user.username}}).exec();
             }else{
-                req.user.following.splice(index, 1);
-                req.user.save(function(err){
-                    if(err){
-                        req.flash("error", "Error removing user from following.");
-                        return res.redirect('/accounts/' + inspec);
-                    }
-                });
-                const currIndex = user.followers.indexOf(req.user.username);
-                if(currIndex > -1){
-                    user.followers.splice(currIndex, 1);
-                    user.save(function(err){
-                        if(err){
-                            req.flash("error", "Error removing yourself as a follower.");
-                            return res.redirect('/accounts/' + inspec);
-                        }
-                    });
-                }
+                req.user.updateOne({$push: {following: inspec}}).exec();
+                user.updateOne({$push: {followers: req.user.username}}).exec();
             }
         });
     }
-    return res.redirect('/accounts/' + inspec);
+    res.redirect('/accounts/' + inspec);
 });
 
 module.exports = router;

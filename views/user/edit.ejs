@@ -1,5 +1,5 @@
 <%- include('../partials/header') %>
-<div class='form-flex-div flex-column text-center'>
+<div class='form-flex-div flex-column justify-content-around text-center'>
     <form action="/accounts/<%= currentUser.username %>/edit?_method=PUT" method="POST" enctype="multipart/form-data">
         <h1 class="h3 mb-3 font-weight-normal">Change Account Information</h1>
         <label for="username" class="sr-only">Change Username</label>
@@ -11,19 +11,22 @@
           </small>
         <label for="confirmPass" class="sr-only">Confirm New Password</label>
         <input type="password" id="confirmPass" name="confirmPass" class="form-control" placeholder="Confirm New Password">
-        <div class="input-group mb-4">
+        <div class="input-group mb-3">
             <label class="custom-file-label file-upload text-left" for="file">Add profile image</label>
             <input type="file" class="custom-file-input file-upload" accept="image/*" id="file" name="propic" aria-describedby="imageInput">
         </div>
+        <span id='preview' class="dot"></span>
         <button class="btn btn-lg btn-primary btn-block" type="submit" value="Submit Changes">Save Changes</button>
     </form>
-    <img class="mb-3" id="output"/>
 </div>
 
 <script>
+    const profile = document.getElementById("preview");
+    const url =  "data:image/<%=currentUser.profile_pic.contentType%>;base64,<%=currentUser.profile_pic.data.toString('base64')%>";
+    profile.style.backgroundImage = "url('" + url.replace(/(\r\n|\n|\r)/gm, "") + "')";
     document.getElementById("file").onchange = function(event) {
-        var image = document.getElementById('output');
-        image.src = URL.createObjectURL(event.target.files[0]);
+        var image = document.getElementById('preview');
+        image.style.backgroundImage = "url(" + URL.createObjectURL(event.target.files[0]) +")";
     };
 </script>
 <%- include('../partials/footer') %>

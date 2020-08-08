@@ -7,7 +7,10 @@ Future changes:
 * store posts with author instead of having PostSchema (DISREGARD)
 * file uploads for images
 * delete post confirmation (DONE)
-* deleting user account and all associated posts/following users
+* deleting user account and all associated posts/following users (DONE)
 * different auth methods
 * search bar scroll move with up/down arrow
 * submit search bar form on enter key
+* adding comments
+* ability to tag in comments/notifications
+* images that fit together to remove whitespace on home page

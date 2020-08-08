@@ -17,6 +17,8 @@ UserSchema.plugin(passportLocalMongoose);
 UserSchema.pre('deleteOne', {document: true}, async function(next) {
     try {
         await Post.deleteMany({author: this.username});
+        await this.model('User').updateMany({followers: this.username}, {$pull: {followers: this.username}});
+        await this.model('User').updateMany({following: this.username}, {$pull: {following: this.username}});
         next();
     } catch (err) {
         console.log(err);
