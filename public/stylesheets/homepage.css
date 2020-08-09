@@ -55,8 +55,6 @@ body{
 
 .autocomplete-items {
     position: absolute;
-    border: 1px solid black;
-    border-top: none;
     z-index: 99;
     /*position the autocomplete items to be the same width as the container:*/
     top: 100%;

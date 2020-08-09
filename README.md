@@ -14,3 +14,4 @@ Future changes:
 * adding comments
 * ability to tag in comments/notifications
 * images that fit together to remove whitespace on home page
+* navbar buttons on user profiles

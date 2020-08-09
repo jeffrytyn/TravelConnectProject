@@ -1,11 +1,21 @@
 <%- include('../partials/header') %>
-<div class='container home-btn'>
-    <a href="/">Home</a>
+<div class='container mt-3 mb-3'>
+    <a href="/" class="btn btn-sm btn-outline-primary">Home</a>
     <% if(currentUser && currentUser.username === foundUser.username){ %>
-        <a class="float-right" href="/accounts/<%= foundUser.username %>/edit">Edit Profile</a>
+        <div class="dropdown dropleft float-right">
+            <a class="btn btn-secondary btn-sm dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Settings
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+              <a class="dropdown-item mb-2" href="/accounts/<%= foundUser.username %>/edit">Edit Profile</a>
+              <form class="d-inline dropdown-item" action="/accounts/<%= foundUser.username %>?_method=DELETE" method="POST">
+                <input type='submit' class="btn btn-outline-danger deletebtn" value="Delete Account">
+              </form>
+            </div>
+          </div>
     <% } %>
 </div>
-<div class="profile-pic">
+<div class="text-center mb-4">
     <span class="dot"></span>
     <div class='profile-username'>
         <h1><%= foundUser.username %></h1>
@@ -24,7 +34,7 @@
             </a>
         </div>
         <% if(currentUser && currentUser.username !== foundUser.username){ %>
-        <form action='/accounts/<%= foundUser.username %>?_method=PATCH' method="POST">
+        <form action='/accounts/<%= foundUser.username %>/followtoggle' method="POST">
             <button type='submit' class="btn btn-outline-primary btn-sm">
                 <% if(currentUser.following.includes(foundUser.username)){ %>
                     Following
@@ -57,7 +67,7 @@
                   <p class="card-text"><%= post.body %></p>
                   <% if(currentUser && currentUser.username === foundUser.username) { %>
                     <form name="deleteForm" method="POST" action="/accounts/<%= foundUser.username %>/posts/<%= post._id %>?_method=DELETE">
-                        <button id="deletebtn" type='submit' class="btn btn-outline-danger btn-sm">Delete</button>
+                        <button type='submit' class="deletebtn btn btn-outline-danger btn-sm">Delete</button>
                         <a href="/accounts/<%= foundUser.username %>/posts/<%= post._id %>/edit" class='btn btn-outline-success btn-sm float-right'>Edit post</a>
                     </form>
                   <% } %>
@@ -69,11 +79,13 @@
 </div>
 
 <script>
-    const btn = document.getElementById("deletebtn");
+    const btn = document.getElementsByClassName("deletebtn");
     if(btn){
-        btn.onclick = function(){
-            return confirm("Want to delete this post?");
-        };    
+        for(let i = 0; i < btn.length; i++){
+            btn[i].onclick = function(){
+                return confirm("Are you sure you want to delete?");
+            }
+        }
     }
 </script>
 <script>

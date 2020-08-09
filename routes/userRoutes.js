@@ -50,6 +50,46 @@ router.post('/:username', function(req, res){
     res.redirect("back");
 });
 
+router.delete('/:username', [isLoggedIn, checkAccountOwnership], function(req, res){
+    User.findOne({username: req.params.username}, function(err, user){
+        if(err){
+            req.flash("error", "Error deleting your account.");
+            return res.redirect("/accounts/" + req.params.username);
+        }
+        user.deleteOne();
+        req.flash("success", "Account deleted.");
+        return res.redirect('/logout');
+    });
+})
+
+router.post('/:username/followtoggle', isLoggedIn, function(req, res){
+    const inspec = req.params.username;
+    if(inspec !== req.user.username){
+        User.findOne({username: inspec}, async function(err, user){
+            if(err || !user){
+                req.flash('error', "Error finding user");
+                return res.redirect('/accounts/' + inspec);
+            }
+            if(!("followers" in user)){
+                user.followers = [];
+                await user.save();
+            }
+            if(!("following" in req.user)){
+                req.user.following = [];
+                await req.user.save();
+            }
+            if(req.user.following.includes(inspec)){
+                req.user.updateOne({$pull: {following: inspec}}).exec();
+                user.updateOne({$pull: {followers: req.user.username}}).exec();
+            }else{
+                req.user.updateOne({$push: {following: inspec}}).exec();
+                user.updateOne({$push: {followers: req.user.username}}).exec();
+            }
+        });
+    }
+    res.redirect('/accounts/' + inspec);
+});
+
 router.get('/:username/edit', [isLoggedIn, checkAccountOwnership], function(req, res){
     res.render("user/edit");
 });
@@ -119,34 +159,6 @@ router.get('/:username/following', function(req, res){
         }
         return res.render("user/follow", {following: user.following, followers: undefined});
     });
-});
-
-router.patch('/:username', isLoggedIn, function(req, res){
-    const inspec = req.params.username;
-    if(inspec !== req.user.username){
-        User.findOne({username: inspec}, async function(err, user){
-            if(err || !user){
-                req.flash('error', "Error finding user");
-                return res.redirect('/accounts/' + inspec);
-            }
-            if(!("followers" in user)){
-                user.followers = [];
-                await user.save();
-            }
-            if(!("following" in req.user)){
-                req.user.following = [];
-                await req.user.save();
-            }
-            if(req.user.following.includes(inspec)){
-                req.user.updateOne({$pull: {following: inspec}}).exec();
-                user.updateOne({$pull: {followers: req.user.username}}).exec();
-            }else{
-                req.user.updateOne({$push: {following: inspec}}).exec();
-                user.updateOne({$push: {followers: req.user.username}}).exec();
-            }
-        });
-    }
-    res.redirect('/accounts/' + inspec);
 });
 
 module.exports = router;
