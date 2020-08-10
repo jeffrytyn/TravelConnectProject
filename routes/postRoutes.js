@@ -1,24 +1,44 @@
 const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
 const router = express.Router({mergeParams: true});
 const Post = require('../models/post');
 const middleware = require("../middleware/main");
 
 router.use(middleware.isLoggedIn);
-
 let checkPostOwnership = middleware.checkPostOwnership;
 let checkAccountOwnership = middleware.checkAccountOwnership;
+
+const storage = multer.diskStorage({ 
+    destination: (req, file, cb) => { 
+        cb(null, './posts');
+    }, 
+    filename: (req, file, cb) => { 
+        cb(null, req.params.username + "_" + file.originalname); 
+    } 
+}); 
+  
+const upload = multer({ storage: storage });
 
 router.get('/new', checkAccountOwnership, function(req, res){
     res.render('posts/create');
 });
 
-router.post('/new', checkAccountOwnership, function(req, res){
+router.post('/new', [checkAccountOwnership, upload.single('postPic')], function(req, res){
     let newPost = new Post({title: req.body.title, 
                            body: req.body.body, 
-                           image: req.body.image, 
                            author: req.user.username,
                            _date: Date.now()
                           });
+    newPost.image = {
+        data: fs.readFileSync(req.file.path),
+        contentType: req.file.mimetype
+    }
+    fs.unlink(req.file.path, (err) => {
+        if(err){
+            console.log("Unable to remove image with error: " + err);
+        }
+    }); 
     newPost.save(function(err){
         if(err){
             req.flash("error", "There was an error submitting the post, try again.");
@@ -48,8 +68,16 @@ router.get('/:id/edit', checkPostOwnership, function(req, res){
     })
 });
 
-router.put('/:id', checkPostOwnership, function(req, res){
-    Post.findByIdAndUpdate(req.params.id, {title: req.body.title, body: req.body.body, image: req.body.image}, function(err, post){
+router.put('/:id', [checkPostOwnership, upload.single("postPic")], function(req, res){
+    Post.findByIdAndUpdate(req.params.id, {title: req.body.title, body: req.body.body, image: {
+        data: fs.readFileSync(req.file.path),
+        contentType: req.file.mimetype
+    }}, function(err, post){
+        fs.unlink(req.file.path, (err) => {
+            if(err){
+                console.log("Unable to remove image with error: " + err);
+            }
+        });
         if(!post || err){
             req.flash("error", "Error updating post.");
             return res.redirect(`/${req.params.id}/edit`);

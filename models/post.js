@@ -3,7 +3,10 @@ const mongoose = require('mongoose');
 let PostSchema = new mongoose.Schema({
     title: String,
     body: String,
-    image: String, //mixed types with Buffer potentially
+    image: {
+        data: Buffer,
+        contentType: String
+    },
     author: { type : String , unique : false, required : true },
     _date: Date
 });

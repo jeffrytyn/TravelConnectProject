@@ -66,7 +66,7 @@ app.get('/', function(req, res){
         let names = [];
         users.forEach(user => names.push(user.username));
         if(req.isAuthenticated()){
-            Post.find({author: {$in: req.user.following}}).sort({_date: -1}).limit(10).exec(function(err, posts){
+            Post.find({author: {$in: req.user.following}}).sort({_date: -1}).limit(15).exec(function(err, posts){
                 if(err){
                     req.flash("error", "Error retrieving recent posts");
                     return res.render('index', {names: names});

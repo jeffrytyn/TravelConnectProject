@@ -1,15 +1,16 @@
 <%- include('../partials/header') %>
 
 <div class='container form-flex-div'>
-    <form class='w-100' action='/accounts/<%= currentUser.username %>/posts/new' method="POST">
+    <form class='w-100' action='/accounts/<%= currentUser.username %>/posts/new' enctype="multipart/form-data" method="POST">
         <p class='display-4 text-center mt-5'>Make a New Post</p>
         <div class="form-group">
           <label for="postTitleInput">Title</label>
-          <input type="text" class="form-control" id="postTitleInput" name='title'>
+          <input type="text" class="form-control" id="postTitleInput" name='title' required>
         </div>
-        <div class="form-group">
-          <label for="postImgURLInput">Image link</label>
-          <input type="text" class="form-control" id="postImgURLInput" name='image'>
+        <label for="postImgDiv">Image Upload</label>
+        <div class="custom-file mb-3" id="postImgDiv">
+          <input type="file" class="custom-file-input file-upload" accept="image/*" id="postImg" name="postPic" required>
+          <label class="custom-file-label" id="intext-label" for="postImg">Image Upload</label>
         </div>
         <div class="form-group">
           <label for="postImgPreview">Image Preview</label>
@@ -19,17 +20,22 @@
         </div>
         <div class="form-group">
           <label for="postBodyInput">Caption</label>
-          <textarea class="form-control" id="postBodyInput" rows="10" name='body'></textarea>
+          <textarea class="form-control" id="postBodyInput" rows="10" name='body' required></textarea>
         </div>
         <input type="submit" class='btn btn-primary mb-5' value="Submit">
-      </form>
+    </form>
 </div>
 
 
 <script>
-  document.getElementById("postImgURLInput").addEventListener('change', function(){
-    const element = this;
-    document.getElementById("postImgPreview").setAttribute("src", element.value);
+  document.getElementById("postImg").addEventListener('change', function(event){
+    document.getElementById("postImgPreview").setAttribute("src", URL.createObjectURL(event.target.files[0]));
+    const index = this.value.lastIndexOf("\\")
+    if(index > -1){
+      document.getElementById("intext-label").textContent = this.value.substring(this.value.lastIndexOf("\\"));
+    }else{
+      document.getElementById("intext-label").textContent = this.value;
+    }
   });
 </script>
 

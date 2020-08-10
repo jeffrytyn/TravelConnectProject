@@ -41,7 +41,7 @@
                 <% posts.forEach(function(post){ %>
                 <div class="col-lg-6 col-md-10 col-12">
                     <div class="card mb-4">
-                        <img src="<%= post.image %>" class="card-img-top" alt="Image goes here">
+                        <img src="data:image/<%=post.image.contentType%>;base64,<%=post.image.data.toString('base64')%>" class="card-img-top" alt="Image goes here">
                         <div class="card-body">
                             <p class='mb-2 font-italic'>By <%= post.author %></p>
                             <h5 class="card-title"><%= post.title %></h5>
