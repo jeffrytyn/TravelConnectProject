@@ -69,15 +69,19 @@ router.get('/:id/edit', checkPostOwnership, function(req, res){
 });
 
 router.put('/:id', [checkPostOwnership, upload.single("postPic")], function(req, res){
-    Post.findByIdAndUpdate(req.params.id, {title: req.body.title, body: req.body.body, image: {
-        data: fs.readFileSync(req.file.path),
-        contentType: req.file.mimetype
-    }}, function(err, post){
+    let updates = {title: req.body.title, body: req.body.body};
+    if(req.file){
+        updates.image = {
+            data: fs.readFileSync(req.file.path),
+            contentType: req.file.mimetype
+        }
         fs.unlink(req.file.path, (err) => {
             if(err){
                 console.log("Unable to remove image with error: " + err);
             }
         });
+    }
+    Post.findByIdAndUpdate(req.params.id, updates, function(err, post){
         if(!post || err){
             req.flash("error", "Error updating post.");
             return res.redirect(`/${req.params.id}/edit`);

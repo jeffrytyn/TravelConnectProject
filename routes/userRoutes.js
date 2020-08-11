@@ -34,7 +34,7 @@ router.get('/:username', function(req, res){
             }
             await user.save();
         }
-        Post.find({author: user.username}).exec(function (err, posts) {
+        Post.find({author: user.username}).sort({_date:-1}).exec(function (err, posts) {
             if (!posts || err){
                 req.flash('error', 'Error retrieving posts.');
                 return res.render('user/show', {foundUser: user});

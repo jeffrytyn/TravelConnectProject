@@ -2,14 +2,14 @@
 
 <div class='container form-flex-div'>
     <form class='w-100' action='/accounts/<%= currentUser.username %>/posts/<%= post._id %>?_method=PUT' enctype="multipart/form-data" method="POST">
-        <p class='display-4 text-center mt-5'>Make a New Post</p>
+        <p class='display-4 text-center mt-5'>Edit Post</p>
         <div class="form-group">
           <label for="postTitleInput">Title</label>
           <input type="text" class="form-control" id="postTitleInput" name='title' value="<%= post.title %>" required>
         </div>
         <label for="postImgDiv">Image Upload</label>
         <div class="custom-file mb-3" id="postImgDiv">
-          <input type="file" class="custom-file-input file-upload" accept="image/*" id="postImg" name="postPic" required>
+          <input type="file" class="custom-file-input file-upload" accept="image/*" id="postImg" name="postPic">
           <label class="custom-file-label" id="intext-label" for="postImg">Image Upload</label>
         </div>
         <div class="form-group">

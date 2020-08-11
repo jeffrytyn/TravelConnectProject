@@ -1,22 +1,23 @@
+$(".navbar-toggler").click(function(){
+  $("#mainNav").toggleClass("bg-blue");
+});
+
 function toggleNavbarBG(){
     const w = window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
     const mainNav = $("#mainNav");
     if(w >= 768){
-        mainNav.removeClass("bg-dark");
+        mainNav.removeClass("bg-blue");
     }else{
         if($(".navbar-collapse.collapse").hasClass('show')){
-            mainNav.addClass("bg-dark");
+            mainNav.addClass("bg-blue");
         }else{
-            mainNav.removeClass("bg-dark");
+            mainNav.removeClass("bg-blue");
         }
     }
 };
 
-$(".navbar-toggler").click(function(){
-    $("#mainNav").toggleClass("bg-dark");
-});
 window.onresize = toggleNavbarBG;
 
 $(document).scroll(function () {

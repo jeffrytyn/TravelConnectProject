@@ -1,7 +1,7 @@
 <%- include('partials/indexHeader.ejs') %>
 <div id='tophalf'>
     <div class="container">
-        <div id = "introCard" class="jumbotron">
+        <div class="jumbotron mb-0">
             <% if(currentUser){ %>
                 <h1 class="display-4">Hello, <%= currentUser.username%>!</h1>
                 <p class="lead">Share what you've experienced with others.</p>
@@ -16,20 +16,27 @@
                     <input type="text" class="form-control" id="searchUser" name="searchUser" placeholder="Search Other Users" required>
                   </div>
                   <div class='col-md-3 pl-md-4 p-sm-0'>
-                    <button class="btn btn-outline-success " type="submit">Search</button>
+                    <button class="btn green-outline-btn" type="submit">Search</button>
                   </div>
                 </div>
             </form>
         </div>
     </div>
+    <ul class="slideshow">
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+        <li></li>
+    </ul>
 </div>
 <% if(!currentUser) {%>
 <div id='bottomhalf'>
     <div class="container">
         <h1>New or Returning?</h1>
         <div id="signUpBtns">
-            <a href="/login" class="btn btn-light btn-lg">Login</a>
-            <a href="/register" class="btn btn-success btn-lg">Register</a>
+            <a href="/login" class="btn btn-lg greenbtn">Login</a>
+            <a href="/register" class="btn btn-lg lightbluebtn">Register</a>
         </div>
     </div>
 </div>
