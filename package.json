@@ -4,7 +4,8 @@
   "description": "A social media platform for users to connect and share their journeys abroad.",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js"
+    "test": "node app.js",
+    "start": "node app.js"
   },
   "author": "Jeffrey Tian",
   "license": "ISC",
