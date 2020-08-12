@@ -100,21 +100,33 @@ router.put('/:username/edit', [isLoggedIn, checkAccountOwnership, upload.single(
             req.flash("error", "Error retrieving user.");
             return res.redirect(`/accounts/${req.params.username}/edit`);
         }
-        if(req.body.username !== req.params.username){
+        if(req.body.username !== user.username){
             const existing = await User.exists({username: req.body.username});
             if(existing){
                 req.flash("error", "That username is taken, try again.");
                 return res.redirect(`/accounts/${req.params.username}/edit`);
             }
-            Post.updateMany({author: user.username}, {author: req.body.username}, async function(err, result){
+            Post.updateMany({author: user.username}, {author: req.body.username}, function(err, result){
                 if(err){
                     req.flash("error", "Unable to update post author, try again.");
                     return res.redirect(`/accounts/${req.params.username}/edit`);
                 }
-                user.username = req.body.username;
-                await user.save();
-                currentUsername = req.body.username;
             });
+            User.updateMany({following: user.username}, {$set: {"following.$": req.body.username}}, function(err, result){
+                if(err){
+                    req.flash("error", "Unable to change name in following, try again.");
+                    return res.redirect(`/accounts/${req.params.username}/edit`);
+                }
+            });
+            User.updateMany({followers: user.username}, {$set: {"followers.$": req.body.username}}, function(err, result){
+                if(err){
+                    req.flash("error", "Unable to change name in followers, try again.");
+                    return res.redirect(`/accounts/${req.params.username}/edit`);
+                }
+            });
+            user.username = req.body.username;
+            await user.save();
+            currentUsername = req.body.username;
         }
         if(req.body.password || req.body.confirmPass){
             if(req.body.password !== req.body.confirmPass){
