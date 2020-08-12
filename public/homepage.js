@@ -72,20 +72,20 @@ function autocomplete(inp, arr) {
     });
     /*execute a function presses a key on the keyboard:*/
     inp.addEventListener("keydown", function(e) {
-        var x = document.getElementById(this.id + "autocomplete-list");
-        if (x) x = x.getElementsByTagName("div");
+        var wrapper = document.getElementById(this.id + "autocomplete-list");
+        if(wrapper) x = wrapper.getElementsByTagName("div");
         if (e.keyCode == 40) {
           /*If the arrow DOWN key is pressed,
           increase the currentFocus variable:*/
           currentFocus++;
           /*and and make the current item more visible:*/
-          addActive(x);
+          addActive(wrapper, x);
         } else if (e.keyCode == 38) { //up
           /*If the arrow UP key is pressed,
           decrease the currentFocus variable:*/
           currentFocus--;
           /*and and make the current item more visible:*/
-          addActive(x);
+          addActive(wrapper, x);
         } else if (e.keyCode == 13) {
           /*If the ENTER key is pressed, prevent the form from being submitted,*/
           e.preventDefault();
@@ -95,7 +95,7 @@ function autocomplete(inp, arr) {
           }
         }
     });
-    function addActive(x) {
+    function addActive(wrapper, x) {
       /*a function to classify an item as "active":*/
       if (!x) return false;
       /*start by removing the "active" class on all items:*/
@@ -104,6 +104,12 @@ function autocomplete(inp, arr) {
       if (currentFocus < 0) currentFocus = (x.length - 1);
       /*add class "autocomplete-active":*/
       x[currentFocus].classList.add("autocomplete-active");
+      if(wrapper){
+        const placement = x[currentFocus].offsetTop + x[currentFocus].getBoundingClientRect().height;
+        if(wrapper.scrollTop + wrapper.getBoundingClientRect().height < placement || wrapper.scrollTop > x[currentFocus].offsetTop){
+          wrapper.scrollTop = x[currentFocus].offsetTop;
+        }
+      }
     }
     function removeActive(x) {
       /*a function to remove the "active" class from all autocomplete items:*/

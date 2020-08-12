@@ -75,7 +75,7 @@ body{
   }
 
 #tophalf{
-    min-height: 33rem;
+    min-height: 30rem;
     width: 100%;
     position: relative;
     padding: 4rem 0 3rem 0;
@@ -145,7 +145,7 @@ body{
     top: 100%;
     left: 0;
     right: 0;
-    max-height: 25vh;
+    max-height: 20vh;
     overflow: auto; 
   }
   

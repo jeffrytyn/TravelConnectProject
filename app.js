@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const flash = require('connect-flash');
+if(!process.env.NODE_ENV || process.env.NODE_ENV === "development"){
+    require("dotenv").config();
+}
 const port = process.env.PORT || 3000;
 
 const userRoutes = require('./routes/userRoutes');
@@ -33,7 +36,7 @@ db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // -------------------- Passport/session setup ---------------------//
 app.use(require('express-session')({
-    secret: "A very secret secure key",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false
 }));
